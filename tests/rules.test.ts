@@ -79,3 +79,25 @@ describe("missing-version-flag", () => {
     expect(findings).toHaveLength(0);
   });
 });
+
+describe("exit-code-convention", () => {
+  it("flags exit codes that don't distinguish general failure from usage error", () => {
+    const parsed = parseHelpText("Exit codes:\n  0    Success\n  1    Any kind of failure");
+    const findings = runRules(parsed).filter((f) => f.ruleId === "exit-code-convention");
+    expect(findings).toHaveLength(1);
+  });
+
+  it("passes when at least two distinct non-zero codes are documented", () => {
+    const parsed = parseHelpText(
+      "Exit codes:\n  0    Success\n  1    General error\n  2    Usage error",
+    );
+    const findings = runRules(parsed).filter((f) => f.ruleId === "exit-code-convention");
+    expect(findings).toHaveLength(0);
+  });
+
+  it("stays silent when no exit code section is documented at all", () => {
+    const parsed = parseHelpText("  -h, --help    Show help");
+    const findings = runRules(parsed).filter((f) => f.ruleId === "exit-code-convention");
+    expect(findings).toHaveLength(0);
+  });
+});
