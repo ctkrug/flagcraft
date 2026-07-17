@@ -93,3 +93,28 @@ Global Flags:
     expect(parsed.flags[3]).toMatchObject({ short: "-v", long: "--v" });
   });
 });
+
+describe("commander-style help text", () => {
+  const fixture = `Usage: mycli [options] <file>
+
+A CLI tool built with commander
+
+Options:
+  -o, --output <path>  output file path
+  -v, --verbose        enable verbose output
+  -V, --version        output the version number
+  -h, --help           display help for command
+`;
+
+  it("parses every comma-separated short/long flag pair", () => {
+    const parsed = parseHelpText(fixture);
+    expect(parsed.flags).toHaveLength(4);
+    expect(parsed.flags[0]).toMatchObject({
+      short: "-o",
+      long: "--output",
+      description: "output file path",
+    });
+    expect(parsed.flags[2]).toMatchObject({ short: "-V", long: "--version" });
+    expect(parsed.flags[3]).toMatchObject({ short: "-h", long: "--help" });
+  });
+});
