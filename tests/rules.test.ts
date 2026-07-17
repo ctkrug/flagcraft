@@ -31,3 +31,30 @@ describe("inconsistent-flag-casing", () => {
     expect(findings).toHaveLength(0);
   });
 });
+
+describe("ambiguous-short-flag-reuse", () => {
+  it("flags a short flag that means different things in different sections", () => {
+    const parsed = parseHelpText(
+      "git branch options:\n  -f, --force    Reset branch to start point\n\n" +
+        "git checkout options:\n  -f, --conflict    Force checkout, discarding changes",
+    );
+    const findings = runRules(parsed).filter((f) => f.ruleId === "ambiguous-short-flag-reuse");
+    expect(findings).toHaveLength(1);
+    expect(findings[0].message).toContain("--force");
+    expect(findings[0].message).toContain("--conflict");
+  });
+
+  it("passes when a short flag means the same thing everywhere", () => {
+    const parsed = parseHelpText(
+      "  -f, --force    Force the action\n\n  -f, --force    Force this one too",
+    );
+    const findings = runRules(parsed).filter((f) => f.ruleId === "ambiguous-short-flag-reuse");
+    expect(findings).toHaveLength(0);
+  });
+
+  it("passes when a short flag only appears once", () => {
+    const parsed = parseHelpText("  -f, --force    Force the action");
+    const findings = runRules(parsed).filter((f) => f.ruleId === "ambiguous-short-flag-reuse");
+    expect(findings).toHaveLength(0);
+  });
+});
