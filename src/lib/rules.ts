@@ -72,7 +72,31 @@ const ambiguousShortFlagReuse: Rule = {
   },
 };
 
-export const rules: Rule[] = [missingHelpFlag, inconsistentFlagCasing, ambiguousShortFlagReuse];
+const missingVersionFlag: Rule = {
+  id: "missing-version-flag",
+  description: "A CLI should offer a --version flag (with an optional -V short alias).",
+  check(parsed: ParsedHelp): Finding[] {
+    const hasVersion = parsed.flags.some((f) => f.long === "--version" || f.short === "-V");
+    if (hasVersion) return [];
+
+    return [
+      {
+        ruleId: "missing-version-flag",
+        severity: "warning",
+        message: "No --version flag found in the parsed output.",
+        citation: 'CLI Guidelines §Help: "Display the current version, ideally SemVer-compliant, ' +
+          'behind a -V, --version flag"',
+      },
+    ];
+  },
+};
+
+export const rules: Rule[] = [
+  missingHelpFlag,
+  inconsistentFlagCasing,
+  ambiguousShortFlagReuse,
+  missingVersionFlag,
+];
 
 export function runRules(parsed: ParsedHelp): Finding[] {
   return rules.flatMap((rule) => rule.check(parsed));
