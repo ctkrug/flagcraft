@@ -70,7 +70,7 @@ else in this backlog is built.
 ## Epic 4 — Ship polish & accessibility
 
 - [x] **4.1 Static build verified deployable under a subpath**
-  - `npm run build` output in `dist/` loads with no console errors when served from a
+  - `npm run build` output in `site/` loads with no console errors when served from a
     non-root base path (relative asset paths throughout, no leading `/`).
 
 - [x] **4.2 Accessibility pass**
