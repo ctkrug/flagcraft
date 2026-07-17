@@ -26,18 +26,20 @@ brackets) into one structured model of flags, descriptions, and usage lines. A r
 walks that model against the CLI Guidelines heuristics and reports violations with the specific
 guideline they cite.
 
-## Planned features
+## Features
 
 - **Real-time grading**: paste text, findings update as you type, no submit button required.
-- **Rule engine**: a growing set of checks encoding the CLI Guidelines — flag casing
-  consistency, `-h`/`--help` presence, ambiguous short-flag reuse across a command tree, exit
-  code conventions, `--version` presence, and more.
-- **Framework-agnostic parsing**: robust across `--help` output shapes from argparse, clap,
-  cobra, commander, and hand-rolled formats.
+- **Rule engine**: five checks encoding the CLI Guidelines — `-h`/`--help` presence, flag-name
+  casing consistency, ambiguous short-flag reuse across a command tree, `--version` presence,
+  and exit-code convention (does the CLI distinguish a general failure from a usage error).
+- **Framework-agnostic parsing**: handles `--help` output shapes from argparse, clap, cobra,
+  commander, and hand-rolled formats sharing the same column-aligned convention.
 - **Guideline citations**: every finding links back to the specific CLI Guidelines section it
   violates, not just a generic warning.
-- **Famous-CLI presets**: one-click examples (`git --help`, `docker --help`, `kubectl --help`)
-  so the tool is instantly demoable with zero setup.
+- **Famous-CLI presets**: one-click examples (`git`, `docker`, `kubectl`) so the tool is
+  instantly demoable with zero setup — including their real-world short-flag inconsistencies.
+- **Graceful on bad input**: pasting prose or non-`--help` text shows a designed "couldn't find
+  any flags" state, never a blank panel or a thrown error.
 
 ## Stack
 
@@ -46,8 +48,9 @@ Entirely client-side — no backend, no build-time network calls, ships as a sta
 
 ## Status
 
-Early scaffold. See [`docs/VISION.md`](docs/VISION.md) for the full design and
-[`docs/BACKLOG.md`](docs/BACKLOG.md) for the build plan.
+Core v1 scope is functionally complete — see [`docs/VISION.md`](docs/VISION.md) for the full
+design, [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the codebase map, and
+[`docs/BACKLOG.md`](docs/BACKLOG.md) for the story-by-story build plan.
 
 ## License
 
