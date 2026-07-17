@@ -4,10 +4,15 @@ import type { FlagDef, ParsedHelp } from "./types";
 //   -h, --help            Show this help message
 //   --version                Print the version number
 //   -v, --verbose <level>    Set verbosity
+//   -f, --file string        Name of the Dockerfile
 // Two or more spaces (or a tab) between the flag column and its description
 // is the one layout convention argparse, clap, cobra, and commander all share.
+// The value placeholder between the flags and the description varies by
+// framework — clap/argparse favor bracketed or uppercase metavars (<FILE>,
+// LEVEL) while cobra/commander favor a bare lowercase type word (string,
+// list) — so it's matched case-insensitively rather than assuming a shape.
 const FLAG_LINE =
-  /^\s*(-{1,2}[A-Za-z][\w-]*)(?:,\s*(-{1,2}[A-Za-z][\w-]*))?(?:[\s=]+[<[]?[A-Z][\w-]*[>\]]?)?(?:\s{2,}|\t+)(\S.*)$/;
+  /^\s*(-{1,2}[A-Za-z][\w-]*)(?:,\s*(-{1,2}[A-Za-z][\w-]*))?(?:[\s=]+[<[]?[\w.-]+[>\]]?)?(?:\s{2,}|\t+)(\S.*)$/;
 
 function assignFlag(token: string, flag: Partial<FlagDef>): void {
   if (token.startsWith("--")) {
