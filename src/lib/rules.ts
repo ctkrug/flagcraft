@@ -91,11 +91,48 @@ const missingVersionFlag: Rule = {
   },
 };
 
+const EXIT_SECTION_HEADING = /exit codes?:?/i;
+const EXIT_CODE_LINE = /^\s*(\d+)\s{2,}\S/;
+
+const exitCodeConvention: Rule = {
+  id: "exit-code-convention",
+  description:
+    "Documented exit codes should distinguish a general failure from a usage error.",
+  check(parsed: ParsedHelp): Finding[] {
+    const headingIndex = parsed.lines.findIndex((line) => EXIT_SECTION_HEADING.test(line));
+    if (headingIndex === -1) return [];
+
+    const codes = new Set<string>();
+    for (const line of parsed.lines.slice(headingIndex + 1)) {
+      if (line.trim() === "") break;
+      const match = EXIT_CODE_LINE.exec(line);
+      if (!match) break;
+      codes.add(match[1]);
+    }
+
+    const nonZeroCodes = [...codes].filter((code) => code !== "0");
+    if (nonZeroCodes.length >= 2) return [];
+
+    return [
+      {
+        ruleId: "exit-code-convention",
+        severity: "warning",
+        message:
+          "Documented exit codes don't distinguish a general failure from a usage error.",
+        citation:
+          'CLI Guidelines §Errors: "Use 1 for a general failure, 2 for a misuse/usage error, ' +
+          'and document the distinction"',
+      },
+    ];
+  },
+};
+
 export const rules: Rule[] = [
   missingHelpFlag,
   inconsistentFlagCasing,
   ambiguousShortFlagReuse,
   missingVersionFlag,
+  exitCodeConvention,
 ];
 
 export function runRules(parsed: ParsedHelp): Finding[] {
