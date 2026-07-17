@@ -30,4 +30,42 @@ describe("parseHelpText", () => {
     const parsed = parseHelpText("Usage: mycli\n\n  -h, --help    Show help");
     expect(parsed.flags[0].line).toBe(3);
   });
+
+  it("handles CRLF line endings", () => {
+    const parsed = parseHelpText("Usage: mycli\r\n\r\n  -h, --help    Show help\r\n");
+    expect(parsed.flags).toHaveLength(1);
+    expect(parsed.flags[0].line).toBe(3);
+  });
+
+  it("keeps emoji and unicode in a description intact", () => {
+    const parsed = parseHelpText("  -h, --help    \u{1F680} Show help éè");
+    expect(parsed.flags[0].description).toBe("\u{1F680} Show help éè");
+  });
+
+  it("stays fast on a long non-matching line (no catastrophic backtracking)", () => {
+    const hostileLine = "-" + "a".repeat(100_000);
+    const start = performance.now();
+    const parsed = parseHelpText(hostileLine);
+    expect(performance.now() - start).toBeLessThan(200);
+    expect(parsed.flags).toHaveLength(0);
+  });
+
+  it("parses a large realistic paste without pathological slowdown", () => {
+    const big = "  -h, --help    Show help\n".repeat(5000);
+    const start = performance.now();
+    const parsed = parseHelpText(big);
+    expect(performance.now() - start).toBeLessThan(500);
+    expect(parsed.flags).toHaveLength(5000);
+  });
+
+  it("returns no flags for empty input", () => {
+    const parsed = parseHelpText("");
+    expect(parsed.flags).toHaveLength(0);
+    expect(parsed.lines).toEqual([""]);
+  });
+
+  it("returns no flags for whitespace-only input", () => {
+    const parsed = parseHelpText("   \n\t\n   ");
+    expect(parsed.flags).toHaveLength(0);
+  });
 });
