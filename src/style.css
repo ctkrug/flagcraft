@@ -73,6 +73,12 @@ body {
   color: var(--accent-support);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
+
 @keyframes blink {
   0%,
   49% {
