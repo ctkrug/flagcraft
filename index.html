@@ -30,7 +30,10 @@
 
       <main class="grader">
         <section class="pane pane-input">
-          <label class="pane-label" for="help-input">Paste --help output</label>
+          <div class="pane-input-header">
+            <label class="pane-label" for="help-input">Paste --help output</label>
+            <div id="presets" class="presets" role="group" aria-label="Load a sample --help output"></div>
+          </div>
           <textarea
             id="help-input"
             placeholder="$ yourcli --help&#10;&#10;paste the output here..."
