@@ -59,6 +59,83 @@
       </main>
     </div>
 
+    <section class="about" aria-labelledby="about-title">
+      <div class="about-inner">
+        <h2 id="about-title">What Flagcraft checks</h2>
+        <p>
+          Flagcraft is a linter for the text your command-line tool prints when someone runs it
+          with <code>--help</code>. Paste that output into the box above and it grades the flags
+          against the
+          <a href="https://clig.dev">Command Line Interface Guidelines</a>, the widely cited spec
+          for how a good CLI should behave. Every finding names the exact guideline it comes from,
+          so you get a reason, not just a red mark.
+        </p>
+        <p>It runs five checks:</p>
+        <ul>
+          <li>
+            <strong>Missing help flag.</strong> Warns when there is no <code>-h</code> short alias
+            for <code>--help</code>.
+          </li>
+          <li>
+            <strong>Inconsistent flag casing.</strong> Flags long options that are not lowercase,
+            hyphen-separated words.
+          </li>
+          <li>
+            <strong>Ambiguous short-flag reuse.</strong> Catches a short flag like <code>-f</code>
+            that maps to two different long flags across a command tree.
+          </li>
+          <li>
+            <strong>Missing version flag.</strong> Warns when there is no <code>--version</code>
+            (or <code>-V</code>).
+          </li>
+          <li>
+            <strong>Exit-code convention.</strong> Checks that documented exit codes distinguish a
+            general failure from a usage error.
+          </li>
+        </ul>
+
+        <h3>How it works</h3>
+        <p>
+          Flagcraft never runs your program or reads its source. It parses the same
+          <code>--help</code> text a user would see in a terminal, so it works with any framework
+          that prints column-aligned help: Python's argparse, Rust's clap, Go's cobra, Node's
+          commander, or a hand-rolled parser. Everything runs in your browser. The text you paste
+          never leaves your machine, and there is nothing to install.
+        </p>
+
+        <h2>FAQ</h2>
+        <dl class="faq">
+          <dt>Does Flagcraft upload my <code>--help</code> output?</dt>
+          <dd>
+            No. Parsing and grading run entirely in your browser. Nothing is sent to a server, and
+            there is no account or login.
+          </dd>
+          <dt>Which CLI frameworks does it understand?</dt>
+          <dd>
+            Any that print column-aligned help with two or more spaces between a flag and its
+            description, which covers argparse, clap, cobra, and commander without configuration.
+          </dd>
+          <dt>What are the CLI Guidelines?</dt>
+          <dd>
+            The <a href="https://clig.dev">Command Line Interface Guidelines</a> are an open,
+            opinionated spec for building command-line programs people enjoy using. Flagcraft
+            encodes a handful of their concrete, checkable rules.
+          </dd>
+          <dt>Can I lint my own tool?</dt>
+          <dd>
+            Yes. Run your program with <code>--help</code>, copy the output, and paste it in. Or
+            click a preset (git, docker, kubectl) to see how established tools score.
+          </dd>
+          <dt>Why do famous CLIs still get findings?</dt>
+          <dd>
+            Large tools accumulate history. git, for example, reuses <code>-f</code> for different
+            long flags across subcommands, which is exactly the kind of inconsistency the
+            guidelines warn against.
+          </dd>
+        </dl>
+      </div>
+    </section>
+
     <footer class="site-footer">
       <p>
         Built by Charlie Krug. Source on
