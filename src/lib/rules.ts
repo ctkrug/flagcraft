@@ -44,7 +44,35 @@ const inconsistentFlagCasing: Rule = {
   },
 };
 
-export const rules: Rule[] = [missingHelpFlag, inconsistentFlagCasing];
+const ambiguousShortFlagReuse: Rule = {
+  id: "ambiguous-short-flag-reuse",
+  description: "A short flag should mean the same thing everywhere it appears.",
+  check(parsed: ParsedHelp): Finding[] {
+    const meanings = new Map<string, Set<string>>();
+    for (const flag of parsed.flags) {
+      if (!flag.short || !flag.long) continue;
+      const longForms = meanings.get(flag.short) ?? new Set<string>();
+      longForms.add(flag.long);
+      meanings.set(flag.short, longForms);
+    }
+
+    const findings: Finding[] = [];
+    for (const [short, longForms] of meanings) {
+      if (longForms.size < 2) continue;
+      findings.push({
+        ruleId: "ambiguous-short-flag-reuse",
+        severity: "error",
+        message: `"${short}" means different things in different places: ${[...longForms].join(" vs. ")}.`,
+        citation:
+          'CLI Guidelines §Consistency: "Only use a short option for the most common options... ' +
+          'keep the meaning of a given flag consistent across a command tree"',
+      });
+    }
+    return findings;
+  },
+};
+
+export const rules: Rule[] = [missingHelpFlag, inconsistentFlagCasing, ambiguousShortFlagReuse];
 
 export function runRules(parsed: ParsedHelp): Finding[] {
   return rules.flatMap((rule) => rule.check(parsed));
