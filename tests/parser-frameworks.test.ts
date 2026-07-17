@@ -60,3 +60,36 @@ Options:
     expect(parsed.flags[3]).toMatchObject({ short: "-V", long: "--version" });
   });
 });
+
+describe("cobra-style help text", () => {
+  const fixture = `Manage cluster resources.
+
+Usage:
+  mycli get [flags]
+
+Flags:
+  -o, --output string   Output format
+  -w, --watch           Watch for changes
+
+Global Flags:
+      --kubeconfig string   Path to the kubeconfig file
+  -v, --v Level             Number for the log level verbosity
+`;
+
+  it("parses flags from both the Flags: and Global Flags: sections", () => {
+    const parsed = parseHelpText(fixture);
+    expect(parsed.flags).toHaveLength(4);
+    expect(parsed.flags[0]).toMatchObject({
+      short: "-o",
+      long: "--output",
+      description: "Output format",
+    });
+    expect(parsed.flags[1]).toMatchObject({ short: "-w", long: "--watch" });
+    expect(parsed.flags[2]).toMatchObject({
+      long: "--kubeconfig",
+      description: "Path to the kubeconfig file",
+    });
+    expect(parsed.flags[2].short).toBeUndefined();
+    expect(parsed.flags[3]).toMatchObject({ short: "-v", long: "--v" });
+  });
+});
