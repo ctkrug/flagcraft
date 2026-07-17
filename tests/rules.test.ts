@@ -107,4 +107,12 @@ describe("exit-code-convention", () => {
     const findings = runRules(parsed).filter((f) => f.ruleId === "exit-code-convention");
     expect(findings).toHaveLength(0);
   });
+
+  it("flags a section that opens with prose instead of a code table", () => {
+    const parsed = parseHelpText(
+      "Exit codes:\nSee https://example.com for the full list.\n  1    General error",
+    );
+    const findings = runRules(parsed).filter((f) => f.ruleId === "exit-code-convention");
+    expect(findings).toHaveLength(1);
+  });
 });
