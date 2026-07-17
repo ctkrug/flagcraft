@@ -32,3 +32,31 @@ options:
     });
   });
 });
+
+describe("clap-style help text", () => {
+  const fixture = `A tool for demonstrating clap output
+
+Usage: mycli [OPTIONS] <FILE>
+
+Arguments:
+  <FILE>  input file to process
+
+Options:
+  -o, --output <FILE>  Write results to FILE
+  -v, --verbose        Enable verbose logging
+  -h, --help           Print help
+  -V, --version        Print version
+`;
+
+  it("parses flags with <VALUE> placeholders correctly", () => {
+    const parsed = parseHelpText(fixture);
+    expect(parsed.flags).toHaveLength(4);
+    expect(parsed.flags[0]).toMatchObject({
+      short: "-o",
+      long: "--output",
+      description: "Write results to FILE",
+    });
+    expect(parsed.flags[2]).toMatchObject({ short: "-h", long: "--help" });
+    expect(parsed.flags[3]).toMatchObject({ short: "-V", long: "--version" });
+  });
+});
