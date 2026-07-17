@@ -5,9 +5,24 @@ Paste your CLI's `--help` output. Get back a structured lint report scored again
 `-h`/`--help`, ambiguous single-letter flags, unclear exit-code conventions, and more, each
 finding cited to the specific guideline it violates.
 
-No install, no upload, no server round-trip: everything runs client-side in the browser. Paste
-`git --help` and watch it get graded line-by-line in real time — including the inconsistencies
-git itself has picked up over thirty years of history.
+No upload, no server round-trip: once the page is open, everything runs client-side in the
+browser — pasted text never leaves your machine. Paste `git --help` and watch it get graded
+line-by-line in real time — including the inconsistencies git itself has picked up over thirty
+years of history.
+
+## Try it
+
+Flagcraft isn't published anywhere yet, so run it locally:
+
+```sh
+git clone https://github.com/ctkrug/flagcraft.git
+cd flagcraft
+npm install
+npm run dev
+```
+
+Then open the printed `localhost` URL and click one of the `git`/`docker`/`kubectl` preset
+buttons, or paste your own CLI's `--help` output, to see it graded live.
 
 ## Why
 
