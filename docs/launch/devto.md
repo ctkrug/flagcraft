@@ -26,7 +26,7 @@ them with `--help` and you get column-aligned text: a flag or a pair of flags, a
 placeholder, two or more spaces, then a description. That shared convention is the integration
 point. Flagcraft parses the text a user would see in a terminal, which makes it framework-blind
 by construction. The hard problem moves from "integrate with N libraries" to "parse free-form
-text robustly," and the second problem has a much smaller surface.
+text without crashing," and the second problem has a much smaller surface.
 
 The whole parser is one regex:
 
