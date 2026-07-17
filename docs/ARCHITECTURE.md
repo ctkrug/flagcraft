@@ -65,5 +65,5 @@ since grading re-runs on every keystroke.
 - `npm test` — `vitest run`, the full suite.
 - `npm run coverage` — `vitest run --coverage`.
 - `npm run lint` — `tsc --noEmit`.
-- `npm run build` — `tsc -b && vite build`; static output in `dist/`, all relative paths, safe
+- `npm run build` — `tsc -b && vite build`; static output in `site/`, all relative paths, safe
   to serve from a subpath (`apps.charliekrug.com/flagcraft/`).
