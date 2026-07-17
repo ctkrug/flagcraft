@@ -30,8 +30,13 @@
   <body>
     <div id="app">
       <header class="app-header">
-        <h1 class="wordmark">flagcraft<span class="cursor" aria-hidden="true">_</span></h1>
-        <p class="tagline">Grade your <code>--help</code> output against the CLI Guidelines.</p>
+        <div class="app-header-brand">
+          <h1 class="wordmark">flagcraft<span class="cursor" aria-hidden="true">_</span></h1>
+          <p class="tagline">Lint your <code>--help</code> output against the CLI Guidelines.</p>
+        </div>
+        <a class="gh-link" href="https://github.com/ctkrug/flagcraft">
+          View on GitHub <span aria-hidden="true">&#8599;</span>
+        </a>
       </header>
 
       <main class="grader">
@@ -53,6 +58,18 @@
         </section>
       </main>
     </div>
+
+    <footer class="site-footer">
+      <p>
+        Built by Charlie Krug. Source on
+        <a href="https://github.com/ctkrug/flagcraft">GitHub</a>.
+      </p>
+      <p class="site-footer-cross">
+        More by Charlie Krug &#8594;
+        <a href="https://apps.charliekrug.com">apps.charliekrug.com</a>
+      </p>
+    </footer>
+
     <script type="module" src="./src/main.ts"></script>
   </body>
 </html>
