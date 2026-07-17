@@ -15,6 +15,13 @@ describe("missing-help-flag", () => {
     const findings = runRules(parsed).filter((f) => f.ruleId === "missing-help-flag");
     expect(findings).toHaveLength(0);
   });
+
+  it("flags a missing -h short alias when --help is present alone", () => {
+    const parsed = parseHelpText("  --help    Show help");
+    const findings = runRules(parsed).filter((f) => f.ruleId === "missing-help-flag");
+    expect(findings).toHaveLength(1);
+    expect(findings[0].message).toBe("No -h short alias found for --help.");
+  });
 });
 
 describe("inconsistent-flag-casing", () => {
