@@ -39,14 +39,17 @@ body {
   color: var(--text);
   font-family: var(--font-ui);
   min-height: 100vh;
+  display: flex;
 }
 
 #app {
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   padding: var(--space-5) var(--space-4);
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: var(--space-4);
 }
 
@@ -96,6 +99,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
+  flex: 1;
   min-height: 60vh;
 }
 
