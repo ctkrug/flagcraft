@@ -58,3 +58,24 @@ describe("ambiguous-short-flag-reuse", () => {
     expect(findings).toHaveLength(0);
   });
 });
+
+describe("missing-version-flag", () => {
+  it("flags a CLI with no --version or -V anywhere", () => {
+    const parsed = parseHelpText("  -h, --help    Show help");
+    const findings = runRules(parsed).filter((f) => f.ruleId === "missing-version-flag");
+    expect(findings).toHaveLength(1);
+    expect(findings[0].severity).toBe("warning");
+  });
+
+  it("passes when --version is present", () => {
+    const parsed = parseHelpText("  --version    Print the version number");
+    const findings = runRules(parsed).filter((f) => f.ruleId === "missing-version-flag");
+    expect(findings).toHaveLength(0);
+  });
+
+  it("passes when only the -V short alias is present", () => {
+    const parsed = parseHelpText("  -V, --ver    Print the version number");
+    const findings = runRules(parsed).filter((f) => f.ruleId === "missing-version-flag");
+    expect(findings).toHaveLength(0);
+  });
+});
