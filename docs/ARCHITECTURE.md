@@ -49,15 +49,21 @@ textarea input event
 
 ## Tests (`tests/`)
 
-Vitest + jsdom. One file per module (`parser.test.ts`, `rules.test.ts`, `report.test.ts`,
-`presets.test.ts`) plus `parser-frameworks.test.ts`, which fixtures one realistic help-text
-sample per supported framework (argparse, clap, cobra, commander) to pin down cross-framework
-parsing.
+Vitest + jsdom. One file per `src/lib/` module (`parser.test.ts`, `rules.test.ts`,
+`report.test.ts`, `presets.test.ts`) plus `parser-frameworks.test.ts`, which fixtures one
+realistic help-text sample per supported framework (argparse, clap, cobra, commander) to pin
+down cross-framework parsing. `main.test.ts` covers the app-shell wiring itself (grade-on-input,
+preset click handling, empty states, HTML-escaping of pasted content) by mounting the same
+markup `index.html` provides and dynamically re-importing `main.ts` per test.
+`src/lib/*` sits at 100% line/branch coverage; `parser.ts` and `rules.ts` also carry adversarial
+(unicode, CRLF, empty/whitespace-only, pathological-length) and performance-regression cases
+since grading re-runs on every keystroke.
 
 ## Run it
 
 - `npm run dev` — dev server.
 - `npm test` — `vitest run`, the full suite.
+- `npm run coverage` — `vitest run --coverage`.
 - `npm run lint` — `tsc --noEmit`.
 - `npm run build` — `tsc -b && vite build`; static output in `dist/`, all relative paths, safe
   to serve from a subpath (`apps.charliekrug.com/flagcraft/`).
