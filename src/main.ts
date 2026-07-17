@@ -1,17 +1,17 @@
 import "./style.css";
 import { parseHelpText } from "./lib/parser";
 import { runRules } from "./lib/rules";
+import { classifyReport, EMPTY_STATE_MESSAGES } from "./lib/report";
 import type { Finding } from "./lib/types";
 
 const input = document.querySelector<HTMLTextAreaElement>("#help-input")!;
 const report = document.querySelector<HTMLDivElement>("#report")!;
 
-function renderFindings(findings: Finding[]): void {
-  if (findings.length === 0) {
-    report.innerHTML = '<p class="empty-state">No help text yet — paste some to grade it.</p>';
-    return;
-  }
+function renderEmptyState(message: string): void {
+  report.innerHTML = `<p class="empty-state">${escapeHtml(message)}</p>`;
+}
 
+function renderFindings(findings: Finding[]): void {
   report.innerHTML = findings
     .map(
       (f) => `
@@ -31,13 +31,15 @@ function escapeHtml(value: string): string {
 }
 
 function grade(): void {
-  const text = input.value.trim();
-  if (!text) {
-    renderFindings([]);
+  const text = input.value;
+  const parsed = parseHelpText(text);
+  const state = classifyReport(text, parsed);
+
+  if (state === "ready") {
+    renderFindings(runRules(parsed));
     return;
   }
-  const parsed = parseHelpText(text);
-  renderFindings(runRules(parsed));
+  renderEmptyState(EMPTY_STATE_MESSAGES[state]);
 }
 
 input.addEventListener("input", grade);
