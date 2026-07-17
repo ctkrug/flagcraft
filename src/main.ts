@@ -2,10 +2,12 @@ import "./style.css";
 import { parseHelpText } from "./lib/parser";
 import { runRules } from "./lib/rules";
 import { classifyReport, EMPTY_STATE_MESSAGES } from "./lib/report";
+import { presets } from "./lib/presets";
 import type { Finding } from "./lib/types";
 
 const input = document.querySelector<HTMLTextAreaElement>("#help-input")!;
 const report = document.querySelector<HTMLDivElement>("#report")!;
+const presetsContainer = document.querySelector<HTMLDivElement>("#presets")!;
 
 function renderEmptyState(message: string): void {
   report.innerHTML = `<p class="empty-state">${escapeHtml(message)}</p>`;
@@ -42,5 +44,24 @@ function grade(): void {
   renderEmptyState(EMPTY_STATE_MESSAGES[state]);
 }
 
+function renderPresets(): void {
+  presetsContainer.innerHTML = presets
+    .map(
+      (preset) =>
+        `<button type="button" class="preset-btn" data-preset-id="${escapeHtml(preset.id)}">${escapeHtml(preset.label)}</button>`,
+    )
+    .join("");
+
+  presetsContainer.querySelectorAll<HTMLButtonElement>(".preset-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      const preset = presets.find((p) => p.id === button.dataset.presetId);
+      if (!preset) return;
+      input.value = preset.helpText;
+      grade();
+    });
+  });
+}
+
 input.addEventListener("input", grade);
+renderPresets();
 grade();
